@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { FRAGEN, pruefen } from '../src/fragen.js';
+import { FRAGEN, SPRACHEN, pruefen } from '../src/fragen.js';
 
 const gueltig = () => ({
   nutzung: 'taeglich',
@@ -19,10 +19,16 @@ const gueltig = () => ({
 test('accepts a complete answer and normalises it', () => {
   const r = pruefen(gueltig());
   assert.equal(r.ok, true);
+  assert.equal(r.row.sprache, 'de');
   assert.equal(r.row.nutzung, 'taeglich');
   assert.equal(r.row.stoert, '["ki_brei","daten"]');
   assert.equal(r.row.freitext_stoert, 'Zu viel KI.');
   assert.equal(r.row.freitext_wunsch, null);
+});
+
+test('records English answers and falls back to German for unknown languages', () => {
+  assert.equal(pruefen(gueltig(), 'en').row.sprache, 'en');
+  assert.equal(pruefen(gueltig(), 'fr').row.sprache, 'de');
 });
 
 test('optional single choices may be empty', () => {
@@ -35,12 +41,11 @@ test('optional single choices may be empty', () => {
   assert.equal(r.row.land, null);
 });
 
-test('rejects a missing mandatory question', () => {
+test('rejects a missing mandatory question in the page language', () => {
   const body = gueltig();
   body.stoert = [];
-  const r = pruefen(body);
-  assert.equal(r.ok, false);
-  assert.match(r.fehler, /Was stört dich/);
+  assert.match(pruefen(body, 'de').fehler, /Bitte beantworte: Was stört dich/);
+  assert.match(pruefen(body, 'en').fehler, /Please answer: What bothers you/);
 });
 
 test('rejects unknown option values', () => {
@@ -52,9 +57,9 @@ test('rejects unknown option values', () => {
 test('enforces the maximum of three wishes', () => {
   const body = gueltig();
   body.wuensche = ['gruppen', 'gesuche', 'keine_daten', 'mitnehmen'];
-  const r = pruefen(body);
+  const r = pruefen(body, 'en');
   assert.equal(r.ok, false);
-  assert.match(r.fehler, /Höchstens 3/);
+  assert.match(r.fehler, /At most 3/);
 });
 
 test('rejects overlong free text', () => {
@@ -63,8 +68,15 @@ test('rejects overlong free text', () => {
   assert.equal(pruefen(body).ok, false);
 });
 
-test('every question has a unique key and at least two options', () => {
+test('every question and option is translated into every language', () => {
   const keys = FRAGEN.map((f) => f.key);
   assert.equal(new Set(keys).size, keys.length);
-  for (const f of FRAGEN) assert.ok(Object.keys(f.optionen).length >= 2, f.key);
+  for (const f of FRAGEN) {
+    assert.ok(Object.keys(f.optionen).length >= 2, f.key);
+    for (const s of SPRACHEN) {
+      assert.ok(f.frage[s], `${f.key} question ${s}`);
+      if (f.hinweis) assert.ok(f.hinweis[s], `${f.key} hint ${s}`);
+      for (const [k, o] of Object.entries(f.optionen)) assert.ok(o[s], `${f.key}.${k} ${s}`);
+    }
+  }
 });

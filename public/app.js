@@ -1,7 +1,36 @@
 // Renders the survey from /api/fragen, submits to /api/antwort, shows /api/ergebnisse.
+// Page language comes from <html lang>, so the same script serves / (de) and /en/ (en).
+const SPRACHE = document.documentElement.lang === 'en' ? 'en' : 'de';
 const MERKER = 'kontor-umfrage-beantwortet';
 const start = Date.now();
 let fragen = [];
+
+const TEXT = {
+  de: {
+    pflicht: '(Pflicht)', freiwillig: '(freiwillig)',
+    freitext: 'Optional: in eigenen Worten (bitte ohne Namen)', freitextLabel: 'Freitext',
+    fehlt: 'Bitte beantworte noch: ', senden: 'Antworten absenden', sendet: 'Wird gesendet …',
+    sendenFehler: 'Senden fehlgeschlagen. Bitte versuch es noch einmal.',
+    eine: 'Bisher 1 Antwort.', viele: (n) => `Bisher ${n} Antworten.`,
+    keine: 'Noch keine Antworten. Sei die erste Person.',
+    beantwortet: (n) => `${n} beantwortet`, mehrfach: (n) => `${n} beantwortet, Mehrfachantworten möglich`,
+    ladeFehler: 'Ergebnisse konnten nicht geladen werden.',
+    umfrageFehler: 'Die Umfrage konnte nicht geladen werden. Bitte lade die Seite neu.',
+    zahl: 'de-DE',
+  },
+  en: {
+    pflicht: '(required)', freiwillig: '(optional)',
+    freitext: 'Optional: in your own words (please no names)', freitextLabel: 'free text',
+    fehlt: 'Please also answer: ', senden: 'Submit answers', sendet: 'Sending …',
+    sendenFehler: 'Sending failed. Please try again.',
+    eine: '1 answer so far.', viele: (n) => `${n} answers so far.`,
+    keine: 'No answers yet. Be the first.',
+    beantwortet: (n) => `${n} answered`, mehrfach: (n) => `${n} answered, multiple answers possible`,
+    ladeFehler: 'Results could not be loaded.',
+    umfrageFehler: 'The survey could not be loaded. Please reload the page.',
+    zahl: 'en-GB',
+  },
+}[SPRACHE];
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -25,19 +54,19 @@ function el(tag, attrs = {}, ...kinder) {
 
 function frageZeichnen(f) {
   const typ = f.typ === 'eins' ? 'radio' : 'checkbox';
-  const legende = el('legend', {}, f.frage, ' ', el('span', { class: 'pflicht', text: f.pflicht ? '(Pflicht)' : '(freiwillig)' }));
+  const legende = el('legend', {}, f.frage[SPRACHE], ' ', el('span', { class: 'pflicht', text: f.pflicht ? TEXT.pflicht : TEXT.freiwillig }));
   const feld = el('fieldset', { class: 'frage', 'data-key': f.key }, legende);
-  if (f.hinweis) feld.append(el('p', { class: 'frage-hinweis', text: f.hinweis }));
+  if (f.hinweis) feld.append(el('p', { class: 'frage-hinweis', text: f.hinweis[SPRACHE] }));
   const optionen = el('div', { class: 'optionen' });
   for (const [wert, text] of Object.entries(f.optionen)) {
     const eingabe = el('input', { type: typ, name: f.key, value: wert });
-    optionen.append(el('label', { class: 'option' }, eingabe, el('span', { text })));
+    optionen.append(el('label', { class: 'option' }, eingabe, el('span', { text: text[SPRACHE] })));
   }
   feld.append(optionen);
   if (f.freitext) {
     feld.append(el('textarea', {
       class: 'freitext', name: f.freitext, maxlength: '1000',
-      placeholder: 'Optional: in eigenen Worten (bitte ohne Namen)', 'aria-label': `${f.frage} – Freitext`,
+      placeholder: TEXT.freitext, 'aria-label': `${f.frage[SPRACHE]} – ${TEXT.freitextLabel}`,
     }));
   }
   if (f.max) {
@@ -52,7 +81,11 @@ function frageZeichnen(f) {
 
 function formularLesen(formular) {
   const daten = new FormData(formular);
-  const body = { _website: daten.get('_website') || '', _dauer: Math.round((Date.now() - start) / 1000) };
+  const body = {
+    _website: daten.get('_website') || '',
+    _dauer: Math.round((Date.now() - start) / 1000),
+    _sprache: SPRACHE,
+  };
   for (const f of fragen) {
     body[f.key] = f.typ === 'eins' ? daten.get(f.key) : daten.getAll(f.key);
     if (f.freitext) body[f.freitext] = daten.get(f.freitext) || '';
@@ -73,7 +106,7 @@ async function absenden(ereignis) {
 
   const fehlt = fehlendeFrage(body);
   if (fehlt) {
-    fehler.textContent = `Bitte beantworte noch: ${fehlt.frage}`;
+    fehler.textContent = TEXT.fehlt + fehlt.frage[SPRACHE];
     fehler.hidden = false;
     formular.querySelector(`[data-key="${fehlt.key}"]`).scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
@@ -81,22 +114,22 @@ async function absenden(ereignis) {
 
   fehler.hidden = true;
   knopf.disabled = true;
-  knopf.textContent = 'Wird gesendet …';
+  knopf.textContent = TEXT.sendet;
   try {
     const antwort = await fetch('/api/antwort', {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
     });
     const ergebnis = await antwort.json();
-    if (!antwort.ok) throw new Error(ergebnis.fehler || 'Senden fehlgeschlagen.');
+    if (!antwort.ok) throw new Error(ergebnis.fehler || TEXT.sendenFehler);
     merkerSetzen();
     zeigeDanke();
     await ergebnisseLaden();
     $('#ergebnisse').scrollIntoView({ behavior: 'smooth' });
   } catch (e) {
-    fehler.textContent = e.message || 'Senden fehlgeschlagen. Bitte versuch es noch einmal.';
+    fehler.textContent = e.message || TEXT.sendenFehler;
     fehler.hidden = false;
     knopf.disabled = false;
-    knopf.textContent = 'Antworten absenden';
+    knopf.textContent = TEXT.senden;
   }
 }
 
@@ -115,43 +148,44 @@ async function ergebnisseLaden() {
   try {
     const antwort = await fetch('/api/ergebnisse');
     const { gesamt, auswertung } = await antwort.json();
-    stand.textContent = gesamt === 1 ? 'Bisher 1 Antwort.' : `Bisher ${gesamt.toLocaleString('de-DE')} Antworten.`;
+    stand.textContent = gesamt === 1 ? TEXT.eine : TEXT.viele(gesamt.toLocaleString(TEXT.zahl));
     liste.replaceChildren();
     if (gesamt === 0) {
-      liste.append(el('p', { text: 'Noch keine Antworten. Sei die erste Person.' }));
+      liste.append(el('p', { text: TEXT.keine }));
       return;
     }
     for (const f of fragen) {
       const { beantwortet, zaehler } = auswertung[f.key];
-      const block = el('div', { class: 'ergebnis-frage' }, el('h3', { text: f.frage }));
-      const meta = f.typ === 'mehrere' ? `${beantwortet} beantwortet, Mehrfachantworten möglich` : `${beantwortet} beantwortet`;
+      const block = el('div', { class: 'ergebnis-frage' }, el('h3', { text: f.frage[SPRACHE] }));
+      const meta = f.typ === 'mehrere' ? TEXT.mehrfach(beantwortet) : TEXT.beantwortet(beantwortet);
       block.append(el('p', { class: 'ergebnis-meta', text: meta }));
       const sortiert = Object.entries(zaehler).sort((a, b) => b[1] - a[1]);
       for (const [wert, anzahl] of sortiert) {
         const p = prozent(anzahl, beantwortet);
         const balken = el('div', { class: 'balken', role: 'presentation' }, el('span', { style: `width:${p}%` }));
         block.append(el('div', { class: 'ergebnis-zeile' },
-          el('div', { class: 'ergebnis-text' }, el('span', { text: f.optionen[wert] }), el('span', { text: `${p} % (${anzahl})` })),
+          el('div', { class: 'ergebnis-text' }, el('span', { text: f.optionen[wert][SPRACHE] }), el('span', { text: `${p} % (${anzahl})` })),
           balken));
       }
       liste.append(block);
     }
   } catch {
-    stand.textContent = 'Ergebnisse konnten nicht geladen werden.';
+    stand.textContent = TEXT.ladeFehler;
   }
 }
 
-async function start_() {
+async function starten() {
   try {
     fragen = await (await fetch('/api/fragen')).json();
   } catch {
-    $('#fragen').textContent = 'Die Umfrage konnte nicht geladen werden. Bitte lade die Seite neu.';
+    $('#fragen').textContent = TEXT.umfrageFehler;
     return;
   }
   $('#fragen').replaceChildren(...fragen.map(frageZeichnen));
+  $('#absenden').textContent = TEXT.senden;
   $('#umfrage-formular').addEventListener('submit', absenden);
   if (merkerLesen()) zeigeDanke();
   ergebnisseLaden();
 }
 
-start_();
+starten();

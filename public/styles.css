@@ -63,6 +63,7 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 .kopf nav { display: flex; gap: 16px; font-size: 0.95rem; }
 .kopf nav a { color: var(--tinte-leise); text-decoration: none; }
 .kopf nav a:hover { color: var(--ziegel); }
+.kopf nav a.sprache { font-weight: 700; color: var(--ziegel); border: 1px solid var(--linie); border-radius: 6px; padding: 0 6px; }
 @media (max-width: 480px) { .kopf nav a[href="#lage"] { display: none; } }
 
 .held { padding: 56px 0 48px; }

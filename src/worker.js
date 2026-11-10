@@ -1,7 +1,7 @@
 import { FRAGEN, pruefen } from './fragen.js';
 
 const SPALTEN = [
-  'nutzung', 'rolle', 'land', 'stoert', 'gebracht', 'besser_netz',
+  'sprache', 'nutzung', 'rolle', 'land', 'stoert', 'gebracht', 'besser_netz',
   'wuensche', 'wechsel', 'mitmachen', 'freitext_stoert', 'freitext_wunsch',
 ];
 
@@ -20,13 +20,13 @@ async function antwortSpeichern(request, env) {
   try {
     body = await request.json();
   } catch {
-    return json({ fehler: 'Ungültige Daten.' }, 400);
+    return json({ fehler: 'Ungültige Daten. / Invalid data.' }, 400);
   }
   // Honeypot and timing: answer "ok" so bots learn nothing, but store nothing.
   const dauer = Number(body?._dauer);
   if (body?._website || !Number.isFinite(dauer) || dauer < MIN_SEKUNDEN) return json({ ok: true });
 
-  const geprueft = pruefen(body);
+  const geprueft = pruefen(body, body?._sprache);
   if (!geprueft.ok) return json({ fehler: geprueft.fehler }, 400);
 
   const werte = SPALTEN.map((s) => geprueft.row[s] ?? null);
