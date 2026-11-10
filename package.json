@@ -1,0 +1,12 @@
+{
+  "name": "kontor",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8790",
+    "db:local": "wrangler d1 migrations apply kontor --local",
+    "test": "node --test test/*.test.js",
+    "deploy": "wrangler deploy"
+  }
+}

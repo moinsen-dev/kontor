@@ -1,0 +1,135 @@
+/* Kontor – brick of the Speicherstadt, harbour navy, paper. System fonts only (no third-party requests). */
+:root {
+  --papier: #faf7f2;
+  --papier-getoent: #f2ece2;
+  --tinte: #1d2433;
+  --tinte-leise: #556070;
+  --ziegel: #a3472f;
+  --ziegel-dunkel: #86391f;
+  --linie: #e2d9cb;
+  --karte: #ffffff;
+  --balken: #a3472f;
+  --balken-grund: #ece4d8;
+  --fehler: #b3261e;
+  --radius: 12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papier: #141922;
+    --papier-getoent: #1a2030;
+    --tinte: #ece7df;
+    --tinte-leise: #a6adba;
+    --ziegel: #e07a5c;
+    --ziegel-dunkel: #f0937a;
+    --linie: #2c3446;
+    --karte: #1e2535;
+    --balken: #e07a5c;
+    --balken-grund: #2a3244;
+    --fehler: #ff8a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papier: #141922; --papier-getoent: #1a2030; --tinte: #ece7df; --tinte-leise: #a6adba;
+  --ziegel: #e07a5c; --ziegel-dunkel: #f0937a; --linie: #2c3446; --karte: #1e2535;
+  --balken: #e07a5c; --balken-grund: #2a3244; --fehler: #ff8a80; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 64px; }
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--tinte);
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--ziegel); }
+a:hover { color: var(--ziegel-dunkel); }
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 5vw + 0.5rem, 3.4rem); margin: 0.3em 0 0.4em; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 2.5vw + 0.6rem, 2.1rem); margin: 0 0 0.5em; }
+h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
+
+.breite { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+.schmal > * { max-width: 720px; }
+
+.kopf { border-bottom: 1px solid var(--linie); background: var(--papier); position: sticky; top: 0; z-index: 10; }
+.kopf-zeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+.marke { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; color: var(--tinte); font-size: 1.1rem; }
+.marke-zeichen { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; background: var(--ziegel); color: #fff; font-size: 0.95rem; }
+.kopf nav { display: flex; gap: 16px; font-size: 0.95rem; }
+.kopf nav a { color: var(--tinte-leise); text-decoration: none; }
+.kopf nav a:hover { color: var(--ziegel); }
+@media (max-width: 480px) { .kopf nav a[href="#lage"] { display: none; } }
+
+.held { padding: 56px 0 48px; }
+.vorzeile { color: var(--ziegel); font-weight: 600; font-size: 0.95rem; margin: 0; }
+.einleitung { font-size: 1.15rem; color: var(--tinte-leise); max-width: 640px; }
+
+.knopf {
+  display: inline-block; background: var(--ziegel); color: #fff; border: 0; border-radius: 999px;
+  padding: 12px 22px; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; margin: 6px 8px 6px 0;
+}
+.knopf:hover { background: var(--ziegel-dunkel); color: #fff; }
+.knopf:disabled { opacity: 0.6; cursor: wait; }
+.knopf-leise { background: transparent; color: var(--ziegel); box-shadow: inset 0 0 0 2px var(--ziegel); }
+.knopf-leise:hover { background: var(--ziegel); color: #fff; }
+
+.abschnitt { padding: 56px 0; }
+.abschnitt-getoent { background: var(--papier-getoent); }
+.unterzeile { color: var(--tinte-leise); margin-top: -0.2em; }
+
+.zitat { margin: 0; padding: 20px 24px; border-left: 4px solid var(--ziegel); background: var(--karte); border-radius: 0 var(--radius) var(--radius) 0; }
+.zitat p { margin: 0 0 0.6em; font-size: 1.1rem; }
+.zitat footer { color: var(--tinte-leise); font-size: 0.95rem; }
+
+.karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 24px; }
+.karte { background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; }
+.karte p { margin: 0 0 0.6em; }
+.zahl { font-size: 1.9rem; font-weight: 700; color: var(--ziegel); letter-spacing: -0.01em; }
+.quelle { margin-top: auto !important; font-size: 0.85rem; color: var(--tinte-leise); }
+
+.liste { padding-left: 1.2em; }
+.liste li { margin-bottom: 0.7em; }
+
+/* Survey */
+.frage { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
+.frage legend { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; padding: 0; }
+.pflicht { color: var(--ziegel); font-weight: 400; font-size: 0.9rem; }
+.frage-hinweis { color: var(--tinte-leise); font-size: 0.92rem; margin: 0 0 10px; }
+.optionen { display: grid; gap: 8px; }
+.option {
+  display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: var(--karte);
+  border: 1px solid var(--linie); border-radius: 10px; cursor: pointer;
+}
+.option:has(input:checked) { border-color: var(--ziegel); box-shadow: inset 0 0 0 1px var(--ziegel); }
+.option:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+.option input { margin-top: 0.3em; accent-color: var(--ziegel); width: 18px; height: 18px; flex: none; }
+.freitext { width: 100%; margin-top: 10px; min-height: 84px; padding: 10px 12px; font: inherit; color: var(--tinte);
+  background: var(--karte); border: 1px solid var(--linie); border-radius: 10px; resize: vertical; }
+.freitext:focus, .option:focus-within { outline: 2px solid var(--ziegel); outline-offset: 2px; }
+.falle { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.fehler { color: var(--fehler); font-weight: 600; }
+.danke { background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); padding: 20px 24px; }
+.danke h3 { margin-top: 0; }
+
+/* Results */
+.ergebnis-frage { margin-bottom: 28px; }
+.ergebnis-frage h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.ergebnis-meta { color: var(--tinte-leise); font-size: 0.88rem; margin: 0 0 10px; }
+.ergebnis-zeile { margin-bottom: 8px; }
+.ergebnis-text { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; }
+.ergebnis-text span:last-child { font-variant-numeric: tabular-nums; color: var(--tinte-leise); white-space: nowrap; }
+.balken { height: 8px; background: var(--balken-grund); border-radius: 999px; overflow: hidden; margin-top: 3px; }
+.balken > span { display: block; height: 100%; background: var(--balken); border-radius: 999px; }
+.hinweis, .arbeitstitel { color: var(--tinte-leise); font-size: 0.92rem; }
+
+.fuss { border-top: 1px solid var(--linie); padding: 24px 0 40px; color: var(--tinte-leise); font-size: 0.92rem; }
+.fuss-zeile { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; }
+
+/* Legal pages */
+.rechtstext { padding: 40px 0 64px; }
+.rechtstext h2 { font-size: 1.25rem; margin-top: 1.8em; }
