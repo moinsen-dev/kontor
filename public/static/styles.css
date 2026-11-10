@@ -64,7 +64,6 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 .kopf nav a { color: var(--tinte-leise); text-decoration: none; }
 .kopf nav a:hover { color: var(--ziegel); }
 .kopf nav a.sprache { font-weight: 700; color: var(--ziegel); border: 1px solid var(--linie); border-radius: 6px; padding: 0 6px; }
-@media (max-width: 480px) { .kopf nav a[href="#lage"] { display: none; } }
 
 .held { padding: 56px 0 48px; }
 .vorzeile { color: var(--ziegel); font-weight: 600; font-size: 0.95rem; margin: 0; }
@@ -134,3 +133,82 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 /* Legal pages */
 .rechtstext { padding: 40px 0 64px; }
 .rechtstext h2 { font-size: 1.25rem; margin-top: 1.8em; }
+
+/* Navigation */
+.sprungmarke { position: absolute; left: -10000px; top: 8px; background: var(--ziegel); color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 20; }
+.sprungmarke:focus { left: 8px; }
+.kopf nav { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
+.kopf nav a[aria-current="page"] { color: var(--tinte); font-weight: 700; }
+@media (max-width: 560px) {
+  .kopf-zeile { flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .kopf nav { gap: 12px; font-size: 0.9rem; justify-content: flex-start; width: 100%; }
+}
+
+/* Start: three ways in */
+.wege { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 28px; }
+.weg { display: flex; flex-direction: column; gap: 6px; padding: 20px; background: var(--karte); border: 1px solid var(--linie);
+  border-radius: var(--radius); text-decoration: none; color: var(--tinte); transition: border-color .15s, transform .15s; }
+.weg:hover, .weg:focus-visible { border-color: var(--ziegel); transform: translateY(-2px); color: var(--tinte); }
+.weg-titel { font-weight: 700; font-size: 1.15rem; color: var(--ziegel); }
+.weg-text { color: var(--tinte-leise); }
+.weg-knopf { margin-top: auto; font-weight: 600; color: var(--ziegel); }
+@media (prefers-reduced-motion: reduce) { .weg { transition: none; } .weg:hover { transform: none; } html { scroll-behavior: auto; } }
+
+/* Thresholds */
+.schwellen { display: grid; gap: 18px; margin-top: 12px; }
+.schwelle-kopf { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.schwelle-kopf span { color: var(--tinte-leise); font-variant-numeric: tabular-nums; }
+.schwelle .balken { height: 12px; margin-top: 6px; }
+.schwelle-text { color: var(--tinte-leise); font-size: 0.9rem; margin: 6px 0 0; }
+
+/* Survey wizard */
+.umfrage-start .einleitung { margin-bottom: 24px; }
+.fortschritt { height: 6px; background: var(--balken-grund); border-radius: 999px; overflow: hidden; }
+.fortschritt > span { display: block; height: 100%; width: 0; background: var(--balken); transition: width .3s; }
+.fortschritt-text { color: var(--tinte-leise); font-size: 0.9rem; margin: 8px 0 20px; }
+.frage-titel { font-size: clamp(1.35rem, 2vw + 0.8rem, 1.8rem); margin: 0 0 8px; outline: none; }
+.schritt-knoepfe { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.schritt-knoepfe .knopf[hidden] { display: none; }
+.schritt-knoepfe #weiter { margin-left: auto; }
+.land-auswahl, .eingabe { width: 100%; padding: 12px; font: inherit; color: var(--tinte); background: var(--karte);
+  border: 1px solid var(--linie); border-radius: 10px; }
+.land-auswahl:focus, .eingabe:focus { outline: 2px solid var(--ziegel); outline-offset: 2px; }
+.danke .knopf { margin-top: 4px; }
+
+/* Wishes */
+.wunsch-liste { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 12px; }
+.wunsch { display: flex; gap: 16px; padding: 16px; background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); }
+.wunsch-stimmen { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 44px; }
+.stimme { width: 44px; height: 36px; border: 1px solid var(--linie); background: transparent; color: var(--tinte-leise);
+  border-radius: 8px; cursor: pointer; font-size: 1rem; }
+.stimme:hover { border-color: var(--ziegel); color: var(--ziegel); }
+.stimme.aktiv { background: var(--ziegel); border-color: var(--ziegel); color: #fff; }
+.stimme:focus-visible { outline: 2px solid var(--ziegel); outline-offset: 2px; }
+.wunsch-saldo { font-weight: 700; font-variant-numeric: tabular-nums; }
+.wunsch-titel { font-size: 1.1rem; margin: 2px 0 4px; }
+.wunsch-inhalt p { margin: 0 0 6px; }
+.wunsch-meta { color: var(--tinte-leise); font-size: 0.88rem; }
+.vorschlag .knopf { margin-top: 10px; }
+
+/* Pledges */
+.zusagen { display: grid; gap: 16px; margin-top: 24px; }
+.zusage-stand { padding: 20px; background: var(--papier-getoent); border-radius: var(--radius); }
+.zusage-stand h2 { margin-top: 0; font-size: 1.3rem; }
+.zusage { padding: 20px; background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); }
+.zusage.zugesagt { border-color: var(--ziegel); }
+.zusage-titel { font-size: 1.25rem; margin: 0 0 6px; }
+.zusage-ok { font-weight: 700; color: var(--ziegel); }
+.zusage-formular { display: grid; gap: 10px; margin-top: 8px; }
+.feld { display: grid; gap: 6px; }
+.feld-titel { font-weight: 600; font-size: 0.95rem; margin: 6px 0 0; }
+.optionen.kompakt { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.einwilligung { display: flex; gap: 10px; align-items: flex-start; font-size: 0.92rem; color: var(--tinte-leise); }
+.einwilligung[hidden] { display: none; }
+.einwilligung input { margin-top: 0.3em; accent-color: var(--ziegel); width: 18px; height: 18px; flex: none; }
+.zusage-formular .knopf { justify-self: start; }
+
+/* Principles and statutes */
+.charta { padding-left: 1.4em; }
+.charta li { margin-bottom: 0.6em; font-size: 1.05rem; }
+.satzung .paragraf h3 { margin: 1.6em 0 0.4em; }
+.satzung .paragraf p { margin: 0 0 0.7em; }

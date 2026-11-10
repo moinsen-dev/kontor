@@ -11,7 +11,7 @@ const gueltig = () => ({
   wechsel: 'parallel',
   mitmachen: ['testen'],
   rolle: 'selbststaendig',
-  land: 'de',
+  land: 'DE',
   freitext_stoert: '  Zu viel KI.  ',
   freitext_wunsch: '',
 });
@@ -72,11 +72,27 @@ test('every question and option is translated into every language', () => {
   const keys = FRAGEN.map((f) => f.key);
   assert.equal(new Set(keys).size, keys.length);
   for (const f of FRAGEN) {
-    assert.ok(Object.keys(f.optionen).length >= 2, f.key);
+    if (f.typ !== 'land') assert.ok(Object.keys(f.optionen).length >= 2, f.key);
     for (const s of SPRACHEN) {
       assert.ok(f.frage[s], `${f.key} question ${s}`);
       if (f.hinweis) assert.ok(f.hinweis[s], `${f.key} hint ${s}`);
       for (const [k, o] of Object.entries(f.optionen)) assert.ok(o[s], `${f.key}.${k} ${s}`);
     }
   }
+});
+
+test('country accepts ISO codes only', () => {
+  const body = gueltig();
+  body.land = 'BR';
+  assert.equal(pruefen(body).row.land, 'BR');
+  body.land = 'de';
+  assert.equal(pruefen(body).ok, false);
+});
+
+test('industry is optional and validated', () => {
+  const body = gueltig();
+  body.branche = 'it';
+  assert.equal(pruefen(body).row.branche, 'it');
+  body.branche = 'raumfahrt';
+  assert.equal(pruefen(body).ok, false);
 });

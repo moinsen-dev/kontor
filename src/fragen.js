@@ -1,5 +1,6 @@
 // Single source of truth for the survey (German and English): the worker validates
 // against it, the page renders from it (served as /api/fragen).
+import { LAENDER } from './laender.js';
 
 export const SPRACHEN = ['de', 'en'];
 
@@ -109,14 +110,27 @@ export const FRAGEN = [
     },
   },
   {
-    key: 'land', typ: 'eins', pflicht: false,
-    frage: t('Wo arbeitest du?', 'Where do you work?'),
+    key: 'branche', typ: 'eins', pflicht: false,
+    frage: t('In welcher Branche arbeitest du?', 'Which field do you work in?'),
     optionen: {
-      de: t('Deutschland', 'Germany'),
-      at: t('Österreich', 'Austria'),
-      ch: t('Schweiz', 'Switzerland'),
-      anderes: t('Anderswo', 'Elsewhere'),
+      it: t('IT und Software', 'IT and software'),
+      beratung: t('Beratung', 'Consulting'),
+      marketing: t('Marketing, Medien, Kommunikation', 'Marketing, media, communications'),
+      kreativ: t('Design und Kreativwirtschaft', 'Design and creative industries'),
+      handwerk: t('Handwerk, Produktion, Technik', 'Trades, manufacturing, engineering'),
+      handel: t('Handel und Vertrieb', 'Retail and sales'),
+      finanzen: t('Finanzen, Recht, Verwaltung', 'Finance, law, administration'),
+      gesundheit: t('Gesundheit und Soziales', 'Health and social care'),
+      bildung: t('Bildung und Wissenschaft', 'Education and research'),
+      oeffentlich: t('Öffentlicher Dienst und Gemeinnütziges', 'Public sector and non-profit'),
+      anderes: t('Anderes', 'Other'),
     },
+  },
+  {
+    key: 'land', typ: 'land', pflicht: false,
+    frage: t('In welchem Land arbeitest du?', 'Which country do you work in?'),
+    hinweis: t('Hilft uns zu sehen, wo genug Menschen für einen Start zusammenkommen.', 'Helps us see where enough people come together for a start.'),
+    optionen: {},
   },
 ];
 
@@ -137,9 +151,9 @@ export function pruefen(body, sprache = 'de') {
   const row = { sprache: s };
   for (const f of FRAGEN) {
     const wert = body[f.key];
-    const erlaubt = Object.keys(f.optionen);
+    const erlaubt = f.typ === 'land' ? LAENDER : Object.keys(f.optionen);
     const frage = f.frage[s];
-    if (f.typ === 'eins') {
+    if (f.typ === 'eins' || f.typ === 'land') {
       if (wert == null || wert === '') {
         if (f.pflicht) return { ok: false, fehler: MELDUNG.fehlt[s] + frage };
         row[f.key] = null;

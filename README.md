@@ -31,8 +31,13 @@ pnpm dev        # http://localhost:8790
 pnpm test
 ```
 
-- Survey questions (German and English) live only in `src/fragen.js`; the worker validates against them and the page renders from them.
-- Pages: `public/index.html` (de), `public/en/index.html` (en), legal pages in both languages.
+- Pages are rendered by the worker in German and English (`src/seiten/`): start, survey (one question at a time), wishes (up/down votes and suggestions), join (pledges with thresholds), principles and draft statutes, imprint, privacy.
+- Survey questions live only in `src/fragen.js`, pledges and thresholds in `src/beteiligung.js`, principles and statutes in `src/satzung.js` (`SATZUNG.md` is exported from it).
+- Suggestions are stored unpublished; approve one with `wrangler d1 execute kontor --remote --command "UPDATE wuensche SET freigegeben = 1 WHERE id = '<id>'"`.
+
+## How it is meant to work
+
+New networks fail because nobody wants to move first. Kontor collects pledges with public thresholds (1,000 people coming along, 25 contributors, €500 a month in pledged donations, 7 founding members). Only when they are reached does building start – and everyone who pledged finds out at the same time.
 
 ## Privacy / Datenschutz
 
