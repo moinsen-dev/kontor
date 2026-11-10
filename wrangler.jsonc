@@ -13,10 +13,11 @@
     {
       "binding": "DB",
       "database_name": "kontor",
-      // Placeholder until the remote database exists (`wrangler d1 create kontor --location weur`).
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "cf905edc-3910-4b4e-8745-86c314f53499",
       "migrations_dir": "migrations"
     }
   ],
+  "routes": [{ "pattern": "kontor.moinsen.dev", "custom_domain": true }],
+  "workers_dev": false,
   "observability": { "enabled": false }
 }
