@@ -8,6 +8,7 @@ export const ROUTEN = {
   wuensche: { de: '/wuensche', en: '/en/wishes' },
   mitmachen: { de: '/mitmachen', en: '/en/join' },
   grundsaetze: { de: '/grundsaetze', en: '/en/principles' },
+  neuigkeiten: { de: '/neuigkeiten', en: '/en/updates' },
   impressum: { de: '/impressum', en: '/en/imprint' },
   datenschutz: { de: '/datenschutz', en: '/en/privacy' },
 };
@@ -30,6 +31,7 @@ const NAV = {
   wuensche: { de: 'Wünsche', en: 'Wishes' },
   mitmachen: { de: 'Mitmachen', en: 'Join' },
   grundsaetze: { de: 'Grundsätze', en: 'Principles' },
+  neuigkeiten: { de: 'Neuigkeiten', en: 'Updates' },
 };
 
 const FUSS = {
@@ -39,7 +41,7 @@ const FUSS = {
 
 const ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a3472f'/%3E%3Cpath d='M9 8v16M9 16l9-8M9 16l9 8M21 8v16' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E";
 
-export function seite({ id, sprache, titel, beschreibung, ogTitel, inhalt, skript, noindex = false }) {
+export function seite({ id, sprache, titel, beschreibung, ogTitel, inhalt, skript, noindex = false, kopfZusatz = '' }) {
   const s = sprache;
   const andere = s === 'de' ? 'en' : 'de';
   const hier = ROUTEN[id][s];
@@ -65,6 +67,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : ''}
 <link rel="alternate" hreflang="x-default" href="${BASIS}${ROUTEN[id].de}">
 <link rel="stylesheet" href="/static/styles.css">
 <link rel="icon" href="${ICON}">
+${kopfZusatz}
 </head>
 <body>
 <a class="sprungmarke" href="#inhalt">${s === 'de' ? 'Zum Inhalt' : 'Skip to content'}</a>

@@ -11,7 +11,7 @@ const T = {
     sendet: 'Wird gesendet …',
     dankeTitel: 'Danke!', dankeText: 'Deine Antworten sind gespeichert. Zwei Dinge helfen jetzt am meisten:',
     wuensche: 'Über Wünsche abstimmen', mitmachen: 'Zusagen, dass du mitkommst',
-    teilen: 'Und teile die Seite mit Menschen, die auch auf LinkedIn sind.',
+    teilen: 'Und teile die Seite mit Menschen, die auch auf LinkedIn sind.', updates: 'Fortschritt per E-Mail verfolgen',
     eine: 'Bisher 1 Antwort.', viele: (n) => `Bisher ${n} Antworten.`, keine: 'Noch keine Antworten. Sei die erste Person.',
     beantwortet: (n) => `${n} beantwortet`, mehrfach: (n) => `${n} beantwortet, Mehrfachantworten möglich`,
     weitere: (n) => `und ${n} weitere`, ladeFehler: 'Ergebnisse konnten nicht geladen werden.',
@@ -23,13 +23,13 @@ const T = {
     sendet: 'Sending …',
     dankeTitel: 'Thank you!', dankeText: 'Your answers are saved. Two things help most now:',
     wuensche: 'Vote on wishes', mitmachen: 'Pledge to come along',
-    teilen: 'And share this page with people who are on LinkedIn too.',
+    teilen: 'And share this page with people who are on LinkedIn too.', updates: 'Follow progress by e-mail',
     eine: '1 answer so far.', viele: (n) => `${n} answers so far.`, keine: 'No answers yet. Be the first.',
     beantwortet: (n) => `${n} answered`, mehrfach: (n) => `${n} answered, multiple answers possible`,
     weitere: (n) => `and ${n} more`, ladeFehler: 'Results could not be loaded.',
   },
 }[SPRACHE];
-const WEGE = { de: { wuensche: '/wuensche', mitmachen: '/mitmachen' }, en: { wuensche: '/en/wishes', mitmachen: '/en/join' } }[SPRACHE];
+const WEGE = { de: { wuensche: '/wuensche', mitmachen: '/mitmachen', updates: '/neuigkeiten#abonnieren' }, en: { wuensche: '/en/wishes', mitmachen: '/en/join', updates: '/en/updates#abonnieren' } }[SPRACHE];
 
 const laenderNamen = new Intl.DisplayNames([SPRACHE], { type: 'region' });
 const land = (code) => { try { return laenderNamen.of(code); } catch { return code; } };
@@ -160,7 +160,7 @@ function zeigeDanke() {
     el('h2', { text: T.dankeTitel }),
     el('p', { text: T.dankeText }),
     el('p', {}, el('a', { class: 'knopf', href: WEGE.wuensche, text: T.wuensche }), ' ', el('a', { class: 'knopf knopf-leise', href: WEGE.mitmachen, text: T.mitmachen })),
-    el('p', { class: 'hinweis', text: T.teilen }));
+    el('p', { class: 'hinweis' }, T.teilen, ' ', el('a', { href: WEGE.updates, text: `${T.updates} →` })));
   danke.hidden = false;
 }
 

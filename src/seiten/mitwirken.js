@@ -37,13 +37,13 @@ const TEXT = {
       titel: 'Mitmachen – Kontor', beschreibung: 'Sag zu, dass du mitkommst, mitbaust, spendest oder den Verein mitgründest. Wir starten, wenn genug zusammenkommen.',
       h1: 'Niemand zieht allein um',
       text: 'Ein neues Netz lohnt sich erst, wenn genug Menschen gleichzeitig kommen. Deshalb sammeln wir Zusagen mit klaren Schwellen. Erst wenn sie erreicht sind, geht es los – und alle, die zugesagt haben, wissen es zur gleichen Zeit.',
-      emailHinweis: 'Eine E-Mail-Adresse ist freiwillig (außer bei der Gründung). Wir nutzen sie nur, um dich zu benachrichtigen, wenn eine Schwelle erreicht ist oder wir dich einladen. Kein Newsletter, keine Weitergabe.',
+      emailHinweis: 'Eine E-Mail-Adresse ist bei Zusagen freiwillig (außer bei der Gründung). Wir nutzen sie nur, um dich zu benachrichtigen, wenn eine Schwelle erreicht ist oder wir dich einladen. Updates per E-Mail gibt es nur mit Bestätigung (Double-Opt-In). Keine Weitergabe.',
     },
     en: {
       titel: 'Join – Kontor', beschreibung: 'Pledge to come along, help build, donate or co-found the association. We start once enough people pledge.',
       h1: 'Nobody moves alone',
       text: 'A new network only works if enough people arrive at the same time. So we collect pledges with clear thresholds. Only when they are reached do we start – and everyone who pledged finds out at the same time.',
-      emailHinweis: 'An e-mail address is optional (except for founding). We only use it to let you know when a threshold is reached or to invite you. No newsletter, never passed on.',
+      emailHinweis: 'An e-mail address is optional for pledges (except for founding). We only use it to let you know when a threshold is reached or to invite you. E-mail updates require confirmation (double opt-in). Never passed on.',
     },
   },
 };

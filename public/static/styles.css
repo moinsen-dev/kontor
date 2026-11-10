@@ -212,3 +212,28 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 .charta li { margin-bottom: 0.6em; font-size: 1.05rem; }
 .satzung .paragraf h3 { margin: 1.6em 0 0.4em; }
 .satzung .paragraf p { margin: 0 0 0.7em; }
+
+/* Join page: choose first */
+.wahl-frage { margin: 36px 0 4px; }
+.wahl-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+.wahl { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; font: inherit; color: var(--tinte);
+  background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); padding: 14px; cursor: pointer; min-height: 120px; }
+.wahl:hover { border-color: var(--ziegel); }
+.wahl:focus-visible { outline: 2px solid var(--ziegel); outline-offset: 2px; }
+.wahl.gewaehlt { border-color: var(--ziegel); box-shadow: inset 0 0 0 2px var(--ziegel); }
+.wahl-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--papier-getoent); color: var(--ziegel); font-weight: 700; }
+.wahl.gewaehlt .wahl-icon { background: var(--ziegel); color: #fff; }
+.wahl-titel { font-weight: 700; line-height: 1.25; }
+.wahl-kurz { color: var(--tinte-leise); font-size: 0.88rem; line-height: 1.35; }
+.wahl.erledigt .wahl-kurz { color: var(--ziegel); font-weight: 600; }
+.zusage-panel { margin-top: 16px; scroll-margin-top: 80px; }
+.zusage-panel:empty { display: none; }
+.zusage-titel:focus { outline: none; }
+
+/* Updates */
+.neuigkeit { padding: 20px 0; border-top: 1px solid var(--linie); }
+.neuigkeit h3 { margin: 0 0 8px; }
+.neuigkeit .vorzeile { margin: 0 0 4px; }
+.abo-formular { display: grid; gap: 12px; max-width: 520px; }
+.abo-formular .knopf { justify-self: start; }
+#abo-ergebnis { margin-bottom: 24px; }

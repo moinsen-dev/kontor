@@ -6,8 +6,10 @@ import { start } from './seiten/start.js';
 import { umfrage, wuensche, mitmachen } from './seiten/mitwirken.js';
 import { grundsaetze } from './seiten/grundsaetze.js';
 import { impressum, datenschutz } from './seiten/recht.js';
+import { neuigkeiten, rss } from './seiten/neuigkeiten.js';
+import { abos, resend } from './abo.js';
 
-const SEITEN = { start, umfrage, wuensche, mitmachen, grundsaetze, impressum, datenschutz };
+const SEITEN = { start, umfrage, wuensche, mitmachen, grundsaetze, neuigkeiten, impressum, datenschutz };
 
 const SPALTEN = [
   'sprache', 'nutzung', 'rolle', 'branche', 'land', 'stoert', 'gebracht', 'besser_netz',
@@ -31,7 +33,7 @@ function html(text, status = 200) {
       'content-type': 'text/html; charset=utf-8',
       'cache-control': 'public, max-age=300',
       'x-content-type-options': 'nosniff',
-      'referrer-policy': 'strict-origin-when-cross-origin',
+      'referrer-policy': 'no-referrer',
     },
   });
 }
@@ -161,6 +163,50 @@ async function zusageSpeichern(request, env) {
   return json({ ok: true });
 }
 
+// Mail delivery: Resend in production; MAILS=konsole prints mails to the dev console (local tests only).
+function mailer(env) {
+  if (env.RESEND_API_KEY) return resend(env.RESEND_API_KEY);
+  if (env.MAILS === 'konsole') return async (mail) => { console.log(`MAIL an ${mail.to}: ${mail.subject}\n${mail.text}`); };
+  return null;
+}
+
+function aboDienst(request, env) {
+  const senden = mailer(env);
+  return senden ? abos({ db: env.DB, senden, ursprung: new URL(request.url).origin }) : null;
+}
+
+async function aboAnmelden(request, env) {
+  const body = await lesen(request);
+  const dienst = aboDienst(request, env);
+  const en = body?._sprache === 'en';
+  if (!dienst) return json({ fehler: en ? 'E-mail updates are not available yet.' : 'E-Mail-Updates sind noch nicht eingerichtet.' }, 503);
+  let ergebnis;
+  try {
+    ergebnis = await dienst.anmelden({ email: body?.email, einwilligung: body?.einwilligung === true, sprache: body?._sprache, website: body?._website || '' });
+  } catch {
+    return json({ fehler: en ? 'The confirmation e-mail could not be sent. Please try again later.' : 'Die Bestätigungsmail konnte nicht gesendet werden. Bitte versuch es später noch einmal.' }, 502);
+  }
+  if (ergebnis.status === 'ungueltig') return json({ fehler: en ? 'Please enter a valid e-mail address and tick the consent box.' : 'Bitte gib eine gültige E-Mail-Adresse an und setze den Haken bei der Einwilligung.' }, 400);
+  if (ergebnis.status === 'ausgelastet') return json({ fehler: en ? 'Too many sign-ups right now. Please try again in an hour.' : 'Gerade sind es zu viele Anmeldungen. Bitte versuch es in einer Stunde noch einmal.' }, 429);
+  return json({ ok: true });
+}
+
+async function aboBestaetigen(request, env) {
+  const body = await lesen(request);
+  const dienst = aboDienst(request, env);
+  if (!dienst) return json({ status: 'ungueltig' }, 503);
+  const ergebnis = await dienst.bestaetigen(body?.token);
+  return json(ergebnis, ergebnis.status === 'bestaetigt' ? 200 : 400);
+}
+
+// Also the one-click target of the List-Unsubscribe header (token in the query string).
+async function aboAbmelden(request, env) {
+  const body = await lesen(request);
+  const token = new URL(request.url).searchParams.get('token') || body?.token;
+  const ergebnis = await abos({ db: env.DB, senden: async () => {}, ursprung: '' }).abmelden(token);
+  return json(ergebnis, ergebnis.status === 'abgemeldet' ? 200 : 400);
+}
+
 const API = {
   'GET /api/fragen': () => json(FRAGEN.map((f) => (f.typ === 'land' ? { ...f, laender: LAENDER } : f))),
   'GET /api/ergebnisse': (r, env) => ergebnisse(env),
@@ -171,6 +217,9 @@ const API = {
   'POST /api/vorschlag': vorschlagSpeichern,
   'GET /api/zusagen': zusagenStand,
   'POST /api/zusage': zusageSpeichern,
+  'POST /api/abo': aboAnmelden,
+  'POST /api/abo/bestaetigen': aboBestaetigen,
+  'POST /api/abo/abmelden': aboAbmelden,
 };
 
 export default {
@@ -183,6 +232,11 @@ export default {
         return json({ fehler: 'Zu viele Anfragen, bitte kurz warten. / Too many requests, please wait a moment.' }, 429);
       }
       return handler(request, env);
+    }
+    if (url.pathname === '/neuigkeiten.xml' || url.pathname === '/en/updates.xml') {
+      return new Response(rss(url.pathname.startsWith('/en/') ? 'en' : 'de'), {
+        headers: { 'content-type': 'application/rss+xml; charset=utf-8', 'cache-control': 'public, max-age=900' },
+      });
     }
     const route = routeFinden(url.pathname);
     if (route) return html(SEITEN[route.seite](route.sprache));
