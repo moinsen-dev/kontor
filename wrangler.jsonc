@@ -20,6 +20,8 @@
       "migrations_dir": "migrations"
     }
   ],
+  // Daily at 03:17 UTC: delete unconfirmed e-mail addresses after seven days.
+  "triggers": { "crons": ["17 3 * * *"] },
   "routes": [{ "pattern": "kontor.moinsen.dev", "custom_domain": true }],
   "workers_dev": false,
   "observability": { "enabled": false }

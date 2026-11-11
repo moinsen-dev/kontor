@@ -213,6 +213,26 @@ test('the consent text is pinned to its version and the join page shows the iden
   assert.ok(mitmachen.includes(EINWILLIGUNG.en));
 });
 
+test('the daily job deletes expired unconfirmed addresses without anyone signing up', async () => {
+  const db = d1();
+  const jetzt = Math.floor(Date.now() / 1000);
+  const eintragen = db.roh.prepare(`INSERT INTO abos (id, email, status, abmelde_token, einwilligung, angefragt_am) VALUES (?, ?, ?, ?, '2026-11-10', ?)`);
+  eintragen.run('a', 'alt@example.org', 'offen', 'token-a', jetzt - GRENZEN.offenTage * TAG - 60);
+  eintragen.run('b', 'frisch@example.org', 'offen', 'token-b', jetzt - GRENZEN.offenTage * TAG + 3600);
+  eintragen.run('c', 'bestaetigt@example.org', 'bestaetigt', 'token-c', jetzt - 400 * TAG);
+  db.roh.prepare("INSERT INTO abo_ereignisse (am, art) VALUES (?, 'bestaetigung')").run(jetzt - 3 * TAG);
+
+  await worker.scheduled({ cron: '17 3 * * *' }, { DB: db });
+
+  const uebrig = db.roh.prepare('SELECT email FROM abos ORDER BY email').all().map((z) => z.email);
+  assert.deepEqual(uebrig, ['bestaetigt@example.org', 'frisch@example.org']);
+  assert.equal(db.roh.prepare('SELECT COUNT(*) AS n FROM abo_ereignisse').get().n, 0, 'old counters are removed too');
+});
+
+test('the daily job is configured', () => {
+  assert.match(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'), /"crons": \["17 3 \* \* \*"\]/);
+});
+
 const anfrage = (pfad, koerper, kopf = { 'content-type': 'application/json' }) => new Request(`https://kontor.moinsen.dev${pfad}`, {
   method: 'POST', headers: kopf, body: typeof koerper === 'string' ? koerper : JSON.stringify(koerper),
 });

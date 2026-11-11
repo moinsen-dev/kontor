@@ -243,4 +243,9 @@ export default {
     if (url.pathname === '/index.html') return Response.redirect(new URL('/', url), 301);
     return env.ASSETS.fetch(request);
   },
+
+  // Daily: deletes addresses that were never confirmed, as promised in the mail and the privacy policy.
+  async scheduled(_ereignis, env) {
+    await abos({ db: env.DB, senden: async () => {}, ursprung: '' }).aufraeumen();
+  },
 };
