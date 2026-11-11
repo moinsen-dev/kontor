@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
 import { routeFinden, ROUTEN } from '../src/seiten/layout.js';
+import { STUFEN, ENTWUERFE } from '../src/roadmap.js';
 import worker from '../src/worker.js';
 import { SATZUNG, CHARTA, alsMarkdown } from '../src/satzung.js';
 import { EINWILLIGUNG } from '../src/abo.js';
@@ -72,6 +74,33 @@ test('an update mail has text, html and its unsubscribe link in the right langua
     assert.ok(mail.text.includes(`Unsubscribe: ${link}`), n.id);
     assert.ok(mail.html.includes(`href="${link}"`), n.id);
     assert.match(updateMail(n, 'de', link).text, /Abmelden: /, n.id);
+  }
+});
+
+test('the roadmap page lists exactly the features of the design document', () => {
+  const dokument = readFileSync(new URL('../docs/roadmap.md', import.meta.url), 'utf8');
+  const stufen = dokument.slice(dokument.indexOf('## Stage 1'), dokument.indexOf('## Standing commitments'));
+  const imDokument = [...stufen.matchAll(/^\| \*\*(.+?)\*\* \|/gm)].map((m) => m[1]);
+  const aufDerSeite = STUFEN.flatMap((s) => s.funktionen.map((f) => f.titel.en));
+  assert.deepEqual(aufDerSeite, imDokument);
+  for (const s of STUFEN) for (const f of s.funktionen) assert.ok(f.titel.de && f.text.de && f.text.en, f.titel.en);
+});
+
+test('the roadmap page links every draft and says nothing is built yet', async () => {
+  for (const [pfad, hinweis] of [['/roadmap', /Gebaut ist davon noch nichts/], ['/en/roadmap', /None of it is built yet/]]) {
+    const text = await (await worker.fetch(new Request(`https://kontor.moinsen.dev${pfad}`), {})).text();
+    assert.match(text, hinweis, pfad);
+    for (const e of ENTWUERFE) {
+      assert.ok(text.includes(`/blob/main/docs/${e.datei}"`), e.datei);
+      assert.ok(existsSync(new URL(`../docs/${e.datei}`, import.meta.url)), e.datei);
+    }
+  }
+});
+
+test('no public page still asks people to move away from LinkedIn', async () => {
+  for (const pfad of ['/', '/en/', '/mitmachen', '/en/join']) {
+    const text = await (await worker.fetch(new Request(`https://kontor.moinsen.dev${pfad}`), {})).text();
+    assert.doesNotMatch(text, /zieht allein um|moves alone|als Erster umziehen|move first/, pfad);
   }
 });
 

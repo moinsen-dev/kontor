@@ -89,6 +89,7 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 .karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-top: 24px; }
 .karte { background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; }
 .karte p { margin: 0 0 0.6em; }
+.karte h3 { margin: 0 0 0.4em; }
 .zahl { font-size: 1.9rem; font-weight: 700; color: var(--ziegel); letter-spacing: -0.01em; }
 .quelle { margin-top: auto !important; font-size: 0.85rem; color: var(--tinte-leise); }
 

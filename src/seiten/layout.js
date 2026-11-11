@@ -8,6 +8,7 @@ export const ROUTEN = {
   wuensche: { de: '/wuensche', en: '/en/wishes' },
   mitmachen: { de: '/mitmachen', en: '/en/join' },
   grundsaetze: { de: '/grundsaetze', en: '/en/principles' },
+  roadmap: { de: '/roadmap', en: '/en/roadmap' },
   neuigkeiten: { de: '/neuigkeiten', en: '/en/updates' },
   impressum: { de: '/impressum', en: '/en/imprint' },
   datenschutz: { de: '/datenschutz', en: '/en/privacy' },
@@ -30,6 +31,7 @@ const NAV = {
   umfrage: { de: 'Umfrage', en: 'Survey' },
   wuensche: { de: 'Wünsche', en: 'Wishes' },
   mitmachen: { de: 'Mitmachen', en: 'Join' },
+  roadmap: { de: 'Roadmap', en: 'Roadmap' },
   grundsaetze: { de: 'Grundsätze', en: 'Principles' },
   neuigkeiten: { de: 'Neuigkeiten', en: 'Updates' },
 };

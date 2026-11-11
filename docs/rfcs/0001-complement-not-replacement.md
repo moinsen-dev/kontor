@@ -76,17 +76,17 @@ A complement that is agent-ready has a concrete advantage: your own assistant ca
 
 ## Consequences for the campaign site
 
-The site was written for the old framing. **Nothing has been changed yet.** The survey has received no answers so far (read 2026-11-11), so changing questions now loses no data.
+The site was written for the old framing and was reworded on 2026-11-11. The survey had received no answers at that point, so changing the question lost no data.
 
-| Where | Today | Needs |
+| Where | Before | After |
 |---|---|---|
-| Join page headline | "Nobody moves alone" | New framing |
-| Pledge threshold text | "We start building at 1,000 pledges" | Reconcile with design-first and single-player value |
-| Start page introduction | "nobody wants to move first" | New framing |
-| Survey question `wechsel` | "Would you switch?", with "I would leave LinkedIn" | Ask about use alongside LinkedIn |
+| Join page headline | "Nobody moves alone" | "Help make Kontor happen" |
+| Pledge threshold text | "We start building at 1,000 pledges" | "… and once the plan has been reviewed" |
+| Start page introduction | "nobody wants to move first" | Complement, single-person value, plan first |
+| Survey question `wechsel` | "Would you switch?" | "Would you use it alongside LinkedIn?" Leaving LinkedIn remains an answer. |
 | README, "How it is meant to work" | "New networks fail because nobody wants to move first" | New framing |
-| First published update | "nobody wants to move first" | Publish a new update explaining the change; do not rewrite history |
-| New page | none | Public roadmap and RFC list |
+| First published update | "nobody wants to move first" | Left unchanged; a new update explains the change |
+| New page | none | Public roadmap and list of drafts |
 
 ## Acceptance criteria
 

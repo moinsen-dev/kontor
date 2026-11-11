@@ -20,7 +20,7 @@ The project is **design-first**. We write down what we want to build and why, in
 
 ## What exists today
 
-Only the **campaign site** at <https://kontor.moinsen.dev>: a survey, wish voting, pledges, draft statutes and e-mail updates. It lives in `src/` and `public/`. It is not the network and does not constrain the network's architecture.
+Only the **campaign site** at <https://kontor.moinsen.dev>: a survey, wish voting, pledges, a public roadmap, draft statutes and e-mail updates. It lives in `src/` and `public/`. It is not the network and does not constrain the network's architecture.
 
 ## How to read a claim
 

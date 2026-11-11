@@ -1,5 +1,4 @@
-// Pledges ("Zusagen") and their thresholds: the assurance-contract idea behind Kontor.
-// Nobody has to move first – we only start once enough people have said they will come along.
+// Pledges ("Zusagen") and their thresholds: we only build once enough people have said they would use, build or carry Kontor.
 
 const t = (de, en) => ({ de, en });
 
@@ -7,11 +6,11 @@ export const ZUSAGEN = {
   mitkommen: {
     titel: t('Ich komme mit', 'I’m in'),
     text: t(
-      'Wenn es Kontor gibt, lege ich ein Profil an und nutze es – mindestens parallel zu LinkedIn.',
-      'If Kontor exists, I’ll create a profile and use it – at least alongside LinkedIn.',
+      'Wenn es Kontor gibt, lege ich ein Profil an und nutze es neben LinkedIn.',
+      'If Kontor exists, I’ll create a profile and use it alongside LinkedIn.',
     ),
     schwelle: 1000,
-    schwelleText: t('Ab {n} Zusagen fangen wir an zu bauen.', 'We start building at {n} pledges.'),
+    schwelleText: t('Ab {n} Zusagen und mit geprüftem Plan fangen wir an zu bauen.', 'We start building at {n} pledges and once the plan has been reviewed.'),
   },
   mitbauen: {
     titel: t('Ich baue mit', 'I’ll help build it'),

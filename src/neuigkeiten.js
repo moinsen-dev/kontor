@@ -5,6 +5,23 @@ const t = (de, en) => ({ de, en });
 
 export const NEUIGKEITEN = [
   {
+    id: '2026-11-11',
+    datum: '2026-11-11',
+    titel: t('Kontor wird eine Ergänzung zu LinkedIn, und wir planen öffentlich', 'Kontor becomes a complement to LinkedIn, planned in public'),
+    text: t(
+      `Wir haben unsere Richtung geändert. Kontor soll LinkedIn nicht ersetzen, sondern ergänzen. Niemand muss dort weggehen. Kontor soll schon für eine einzelne Person nützlich sein: Dein berufliches Netzwerk gehört dir, und deine eigenen Software-Agenten können unter deiner Kontrolle damit arbeiten.
+
+Gebaut ist davon noch nichts. Wir beschreiben zuerst öffentlich, was entstehen soll, und entwickeln erst, wenn die Entwürfe geprüft sind. Die Roadmap steht unter https://kontor.moinsen.dev/roadmap, die englischen Entwürfe liegen auf GitHub (https://github.com/moinsen-dev/kontor/tree/main/docs).
+
+Dazu gehören ein Import der eigenen LinkedIn-Daten ohne Scraping und ein Weg, damit Daten von Menschen, die nicht dabei sind, geschützt bleiben. Lies mit, widersprich und sag uns, was fehlt.`,
+      `We have changed direction. Kontor is not meant to replace LinkedIn but to complement it. Nobody has to leave. Kontor should be useful even to a single person: your professional network belongs to you, and your own software agents can work with it under your control.
+
+None of this is built yet. We first describe in public what we want to create, and develop only once the drafts have been reviewed. The roadmap is at https://kontor.moinsen.dev/en/roadmap, the drafts are on GitHub (https://github.com/moinsen-dev/kontor/tree/main/docs).
+
+They include importing your own LinkedIn data without scraping, and a way to keep the data of people who aren’t part of it protected. Read along, disagree and tell us what is missing.`,
+    ),
+  },
+  {
     id: '2026-11-10',
     datum: '2026-11-10',
     titel: t('Kontor ist online: Umfrage, Wünsche und Zusagen', 'Kontor is live: survey, wishes and pledges'),

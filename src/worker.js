@@ -7,9 +7,10 @@ import { umfrage, wuensche, mitmachen } from './seiten/mitwirken.js';
 import { grundsaetze } from './seiten/grundsaetze.js';
 import { impressum, datenschutz } from './seiten/recht.js';
 import { neuigkeiten, rss } from './seiten/neuigkeiten.js';
+import { roadmap } from './seiten/roadmap.js';
 import { abos, resend } from './abo.js';
 
-const SEITEN = { start, umfrage, wuensche, mitmachen, grundsaetze, neuigkeiten, impressum, datenschutz };
+const SEITEN = { start, umfrage, wuensche, mitmachen, roadmap, grundsaetze, neuigkeiten, impressum, datenschutz };
 
 const SPALTEN = [
   'sprache', 'nutzung', 'rolle', 'branche', 'land', 'stoert', 'gebracht', 'besser_netz',

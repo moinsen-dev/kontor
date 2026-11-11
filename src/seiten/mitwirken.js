@@ -34,15 +34,15 @@ const TEXT = {
   },
   mitmachen: {
     de: {
-      titel: 'Mitmachen – Kontor', beschreibung: 'Sag zu, dass du mitkommst, mitbaust, spendest oder den Verein mitgründest. Wir starten, wenn genug zusammenkommen.',
-      h1: 'Niemand zieht allein um',
-      text: 'Ein neues Netz lohnt sich erst, wenn genug Menschen gleichzeitig kommen. Deshalb sammeln wir Zusagen mit klaren Schwellen. Erst wenn sie erreicht sind, geht es los – und alle, die zugesagt haben, wissen es zur gleichen Zeit.',
+      titel: 'Mitmachen – Kontor', beschreibung: 'Sag zu, dass du Kontor neben LinkedIn nutzen würdest, mitbaust, spendest oder den Verein mitgründest.',
+      h1: 'Hilf mit, Kontor möglich zu machen',
+      text: 'Kontor soll LinkedIn ergänzen, niemand muss dort weggehen. Damit aus dem Plan Software wird, braucht es genug Menschen, die es nutzen würden, mitbauen oder mittragen. Deshalb sammeln wir Zusagen mit klaren Schwellen.',
       emailHinweis: 'Eine E-Mail-Adresse ist bei Zusagen freiwillig (außer bei der Gründung). Wir nutzen sie nur, um dich zu benachrichtigen, wenn eine Schwelle erreicht ist oder wir dich einladen. Updates per E-Mail gibt es nur mit Bestätigung (Double-Opt-In). Keine Weitergabe.',
     },
     en: {
-      titel: 'Join – Kontor', beschreibung: 'Pledge to come along, help build, donate or co-found the association. We start once enough people pledge.',
-      h1: 'Nobody moves alone',
-      text: 'A new network only works if enough people arrive at the same time. So we collect pledges with clear thresholds. Only when they are reached do we start – and everyone who pledged finds out at the same time.',
+      titel: 'Join – Kontor', beschreibung: 'Pledge to use Kontor alongside LinkedIn, help build, donate or co-found the association.',
+      h1: 'Help make Kontor happen',
+      text: 'Kontor is meant to complement LinkedIn, and nobody has to leave. To turn the plan into software, it takes enough people who would use it, help build it or help carry it. So we collect pledges with clear thresholds.',
       emailHinweis: 'An e-mail address is optional for pledges (except for founding). We only use it to let you know when a threshold is reached or to invite you. E-mail updates require confirmation (double opt-in). Never passed on.',
     },
   },

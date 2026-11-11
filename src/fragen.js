@@ -76,12 +76,12 @@ export const FRAGEN = [
   },
   {
     key: 'wechsel', typ: 'eins', pflicht: true,
-    frage: t('Wenn es so ein Netz gäbe: Würdest du wechseln?', 'If such a network existed, would you switch?'),
+    frage: t('Wenn es so ein Netz gäbe: Würdest du es neben LinkedIn nutzen?', 'If such a network existed, would you use it alongside LinkedIn?'),
     optionen: {
-      sofort: t('Ja, ich würde LinkedIn verlassen', 'Yes, I would leave LinkedIn'),
-      parallel: t('Ich würde es parallel nutzen', 'I would use it alongside LinkedIn'),
-      kontakte: t('Nur wenn meine wichtigen Kontakte mitkommen', 'Only if my important contacts came along'),
-      nein: t('Nein, ich bleibe bei LinkedIn', 'No, I’d stay on LinkedIn'),
+      parallel: t('Ja, neben LinkedIn', 'Yes, alongside LinkedIn'),
+      sofort: t('Ja, und ich würde LinkedIn am liebsten ganz verlassen', 'Yes, and I would rather leave LinkedIn altogether'),
+      kontakte: t('Nur wenn meine wichtigen Kontakte auch dort sind', 'Only if my important contacts were there too'),
+      nein: t('Nein, mir reicht LinkedIn', 'No, LinkedIn is enough for me'),
       weiss_nicht: t('Weiß ich nicht', 'Don’t know'),
     },
   },
