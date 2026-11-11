@@ -228,6 +228,7 @@ h3 { font-size: 1.2rem; margin: 2em 0 0.6em; }
 .wahl.erledigt .wahl-kurz { color: var(--ziegel); font-weight: 600; }
 .zusage-panel { margin-top: 16px; scroll-margin-top: 80px; }
 .zusage-panel:empty { display: none; }
+@media (max-width: 560px) { section[id], .zusage-panel { scroll-margin-top: 136px; } } /* the sticky header wraps to two rows here */
 .zusage-titel:focus { outline: none; }
 
 /* Updates */

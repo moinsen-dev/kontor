@@ -1,0 +1,56 @@
+{
+  "git" : {
+    "current_branch" : "main",
+    "github_url" : "https:\/\/github.com\/moinsen-dev\/kontor",
+    "has_uncommitted_changes" : false,
+    "is_repo" : true,
+    "last_commit_author" : "Ulrich Diedrichsen",
+    "last_commit_date" : "2026-11-10T08:45:58Z",
+    "last_commit_message" : "WIP: e-mail updates with double opt-in, updates page, choose-first join page",
+    "local_secret_files" : 10,
+    "stale_days" : 0,
+    "stash_count" : 0,
+    "total_commits" : 7,
+    "uncommitted_files_count" : 0,
+    "unpushed_commits" : 1
+  },
+  "last_scanned" : "2026-11-11T04:18:19Z",
+  "project_path" : "\/Users\/udi\/work\/moinsen\/ideas\/kontor",
+  "pumuckl_version" : 1,
+  "report" : {
+    "accent" : "#2E7D6B",
+    "ai_note" : "Last commit was yesterday and the pledge and survey system is already in place, so you can pick up exactly where you stopped.",
+    "ai_suggestion" : "Run pnpm test and pnpm dev locally, then walk through the double opt-in flow on the join page end to end to see whether the WIP commit works.",
+    "effort_to_complete" : 45,
+    "impact" : 70,
+    "overall_gem_score" : 72,
+    "progress" : 55,
+    "re_entry_action" : "Run pnpm test, then start pnpm dev and test the double opt-in e-mail flow locally from the choose-first join page through to the updates page.",
+    "re_entry_effort" : "~1h",
+    "re_entry_why" : "The last commit is marked WIP, so confirming locally that the tests pass and the opt-in flow works is the fastest way to know what is finished.",
+    "recency" : 95,
+    "resumption_ease" : 82,
+    "vision" : "A transparent, not-for-profit professional network that gets built only once enough people have publicly pledged to switch."
+  },
+  "scan" : {
+    "fast" : {
+      "at" : "2026-11-11T04:18:19Z",
+      "head" : "3c10f4c",
+      "mtime" : 1794300357.9976132
+    },
+    "git" : {
+      "at" : "2026-11-11T04:17:20Z",
+      "head" : "3c10f4c",
+      "mtime" : 1794300357.9976132
+    }
+  },
+  "scoring" : {
+    "ai_note" : "Last commit was yesterday and the pledge and survey system is already in place, so you can pick up exactly where you stopped.",
+    "ai_suggestion" : "Run pnpm test and pnpm dev locally, then walk through the double opt-in flow on the join page end to end to see whether the WIP commit works.",
+    "effort_to_complete" : 45,
+    "impact" : 70,
+    "overall_gem_score" : 72,
+    "progress" : 55,
+    "recency" : 95
+  }
+}

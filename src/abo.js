@@ -46,16 +46,22 @@ export function bestaetigungsMail({ sprache, link }) {
 export function abos({ db, senden, ursprung, jetzt = () => Math.floor(Date.now() / 1000), token = zufall }) {
   const zaehlen = async (art, seit) => (await db.prepare('SELECT COUNT(*) AS n FROM abo_ereignisse WHERE art = ? AND am > ?').bind(art, seit).first()).n;
 
+  // Removes addresses that were never confirmed in time, as promised in the mail and the privacy policy.
+  async function aufraeumen() {
+    const am = jetzt();
+    await db.batch([
+      db.prepare("DELETE FROM abos WHERE status = 'offen' AND angefragt_am < ?").bind(am - GRENZEN.offenTage * 86400),
+      db.prepare('DELETE FROM abo_ereignisse WHERE am < ?').bind(am - 2 * 86400),
+    ]);
+  }
+
   async function anmelden({ email: eingabe, einwilligung, sprache = 'de', website = '' }) {
     const email = normalisieren(eingabe);
     const s = sprache === 'en' ? 'en' : 'de';
     if (!email || einwilligung !== true) return { status: 'ungueltig' };
     if (website) return { status: 'angenommen' }; // trap field filled: a script
     const am = jetzt();
-    await db.batch([
-      db.prepare("DELETE FROM abos WHERE status = 'offen' AND angefragt_am < ?").bind(am - GRENZEN.offenTage * 86400),
-      db.prepare('DELETE FROM abo_ereignisse WHERE am < ?').bind(am - 2 * 86400),
-    ]);
+    await aufraeumen();
     const da = await db.prepare('SELECT * FROM abos WHERE email = ?').bind(email).first();
     // Never reveal whether an address is known, pending or confirmed.
     if (da?.status === 'bestaetigt') return { status: 'angenommen' };
@@ -74,7 +80,7 @@ export function abos({ db, senden, ursprung, jetzt = () => Math.floor(Date.now()
       db.prepare(`INSERT INTO abos (id, email, status, token_hash, abmelde_token, sprache, einwilligung, angefragt_am, mails, letzte_mail_am)
         VALUES (?, ?, 'offen', ?, ?, ?, ?, ?, 1, ?)
         ON CONFLICT(email) DO UPDATE SET token_hash = excluded.token_hash, einwilligung = excluded.einwilligung,
-          sprache = excluded.sprache, mails = abos.mails + 1, letzte_mail_am = excluded.letzte_mail_am
+          sprache = excluded.sprache, angefragt_am = excluded.angefragt_am, mails = abos.mails + 1, letzte_mail_am = excluded.letzte_mail_am
         WHERE abos.status = 'offen'`)
         .bind(da?.id || crypto.randomUUID(), email, await sha256(geheim), token(), s, EINWILLIGUNG_VERSION, am, am),
       db.prepare("INSERT INTO abo_ereignisse (am, art) VALUES (?, 'bestaetigung')").bind(am),
@@ -85,10 +91,11 @@ export function abos({ db, senden, ursprung, jetzt = () => Math.floor(Date.now()
   async function bestaetigen(geheim) {
     if (typeof geheim !== 'string' || !/^[A-Za-z0-9_-]{20,64}$/.test(geheim)) return { status: 'ungueltig' };
     const am = jetzt();
-    const zeile = await db.prepare('SELECT id FROM abos WHERE token_hash = ? AND angefragt_am >= ?')
+    // The token stays valid after confirming, so opening the mail link a second time is still a success.
+    const zeile = await db.prepare("SELECT id FROM abos WHERE token_hash = ? AND (status = 'bestaetigt' OR angefragt_am >= ?)")
       .bind(await sha256(geheim), am - GRENZEN.offenTage * 86400).first();
     if (!zeile) return { status: 'ungueltig' };
-    await db.prepare("UPDATE abos SET status = 'bestaetigt', bestaetigt_am = COALESCE(bestaetigt_am, ?), token_hash = NULL WHERE id = ?").bind(am, zeile.id).run();
+    await db.prepare("UPDATE abos SET status = 'bestaetigt', bestaetigt_am = COALESCE(bestaetigt_am, ?) WHERE id = ?").bind(am, zeile.id).run();
     return { status: 'bestaetigt' };
   }
 
@@ -104,7 +111,7 @@ export function abos({ db, senden, ursprung, jetzt = () => Math.floor(Date.now()
     return (await db.prepare("SELECT COUNT(*) AS n FROM abos WHERE status = 'bestaetigt'").first()).n;
   }
 
-  return { anmelden, bestaetigen, abmelden, anzahl };
+  return { anmelden, bestaetigen, abmelden, anzahl, aufraeumen };
 }
 
 // Resend: one mail per request, idempotency key so a retry never mails twice.
