@@ -11,8 +11,9 @@ Written as drafts in `docs/`: `process.md`, `roadmap.md`, RFC 0001 (complement),
 **Live since 2026-11-11 (worker version `56d102ef`, commit `f36e7b5`):** reworded start page, join page, pledge text and survey question, a new update (`2026-11-11`, on the page and in the feeds, not e-mailed) and a new roadmap page (`/roadmap`, `/en/roadmap`). RFC 0001 lists every change. Checked: 44 tests; browser at desktop, 375 and 320 px without overflow, no console errors; live pages and feeds answer 200, new texts delivered, old framing gone.
 
 **Open, needs Udi:**
-1. What exactly counts as community approval? Udi's sentence broke off at "wenn die Community die ...". Assumed: implementation starts only after the community has approved the specification. Candidates are in `process.md`.
-2. Whether the pledge threshold stays the build gate now that Stage 1 is useful alone (RFC 0001, open question 1).
+1. Whether the pledge threshold stays the build gate now that Stage 1 is useful alone (RFC 0001, open question 1).
+
+**Community gate decided by Udi on 2026-11-11:** at least 5 independent reviewers per RFC, plus a majority vote of the founding members for RFCs 0001 to 0004 (`process.md`). The foundation RFCs therefore cannot be accepted before founding members exist.
 
 **Decided by Udi on 2026-11-11:** Kontor continues independently of Sifa ("Eigenständig weiter"). No outreach planned, and nothing may depend on Sifa's service, schemas or roadmap.
 

@@ -25,7 +25,7 @@ Two things are exempt:
 | **Draft** | A pull request using the [template](rfcs/template.md). | The problem, alternatives and open questions are written down. |
 | **Discussion** | Open for criticism. | At least 30 days have passed and every substantive objection has an answer. |
 | **Review** | Privacy, security and, where needed, legal review. | Reviews are published, findings are resolved. |
-| **Final comment** | Last call, announced on the site and by e-mail update. | 14 days without an unresolved blocking objection. |
+| **Final comment** | Last call, announced on the site and by e-mail update. | 14 days without an unresolved blocking objection, and the [community gate](#community-gate) is met. |
 | **Accepted** | Binding design. | Implementation may begin. |
 | **Implemented** | Built and verified against the RFC's acceptance criteria. | |
 | **Withdrawn / Superseded** | Kept for the record. | |
@@ -41,11 +41,14 @@ A public vote and a design review answer different questions:
 
 ## Community gate
 
-**Open question.** What must be true before "the community" has approved a design? Candidates, which can be combined:
+**Decision (Ulrich Diedrichsen, 2026-11-11):** A design counts as approved by the community only when:
 
-- a minimum number of independent reviewers who are not maintainers (proposal: 5);
-- a public vote of people who pledged, with a quorum;
-- for the four foundation RFCs, a vote of the founding members once they exist.
+1. **every RFC** has been reviewed by at least **5 independent reviewers** who are not maintainers; and
+2. **the four foundation RFCs** (0001 to 0004) have also been approved in a vote of the **founding members**, by majority.
+
+Founding members do not exist yet, so the foundation RFCs cannot be accepted until they do. Both conditions come on top of the stages above, and the maintainer cannot waive them.
+
+**Open question.** What makes a reviewer independent, and how is a review recorded?
 
 ## Extra gate for personal data
 
