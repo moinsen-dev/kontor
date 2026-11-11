@@ -1,34 +1,43 @@
-# STATE – Kontor
+# STATE: Kontor
 
-## Übergabe (2026-11-11)
+## Handoff (2026-11-11)
 
-**Live auf kontor.moinsen.dev (Worker-Version `c40c15e8`, Commit `cbf1cee`):**
-- Updates per E-Mail mit Double-Opt-In über Resend, API `/api/abo`, `/api/abo/bestaetigen`, `/api/abo/abmelden`.
-- Neuigkeiten-Seite `/neuigkeiten` + `/en/updates` mit Zwischenstand, Abo-Formular und RSS (`/neuigkeiten.xml`, `/en/updates.xml`).
-- Mitmachen-Seite: erst Auswahl (5 Kacheln), dann nur das passende Formular.
-- Täglicher Löschlauf 03:17 UTC für unbestätigte Adressen (Udis Ja vom 11.11.).
-- Versandskript mit Vorschau: `scripts/update-senden.mjs`.
+### Design phase (just started, uncommitted, awaiting Udi's review)
 
-**Live geprüft (11.11.):** 16 Seiten, Feeds und Assets antworten 200, Feed wohlgeformt, drei neue Tabellen da. Formular im Browser abgeschickt, Bestätigungsmail kam bei `business@moinsen.dev` an. Vorschau des ersten Updates gesendet. Bei Resend: Domain verifiziert, Öffnungs- und Klickverfolgung aus.
+Udi's decisions on 2026-11-11: Kontor is a complement to LinkedIn, not a replacement; documented in English; design-first with a long specification phase; A2A-ready from day one; features to be collected as a roadmap.
 
-**Nicht live geprüft:**
-- Bestätigen und Abmelden mit echtem Link. Das Postfach-Werkzeug gibt Links aus Mails über die Gruppe `business@` nicht heraus (Signatur ersetzt), und auf Live-Systemen ist das Udis Schritt. Lokal im Browser ist beides geprüft.
-- Der Cron-Lauf selbst: erster Lauf 12.11. um 03:17 UTC. Die Testadresse `business@moinsen.dev` steht unbestätigt in `abos`. Bestätigt Udi sie nicht, muss sie nach dem Lauf am 19.11. weg sein (Nachweis für den Löschlauf).
+Written as drafts in `docs/`: `process.md`, `roadmap.md`, RFC 0001 (complement), 0002 (LinkedIn import), 0003 (architecture), 0004 (agent readiness). `AGENTS.md` translated to English and given the design-first rule.
 
-**Offen:**
-1. Erstes Update an alle: nach Durchsicht der Vorschau `secretariat run kontor -- node scripts/update-senden.mjs 2026-11-10 --senden`. Aktuell 0 Empfänger.
-2. Sitemap und robots.txt fehlen (siehe unten).
+**Not changed:** the live site and README still use the old framing ("nobody moves alone", "would you switch?"). RFC 0001 lists every place.
 
-**Lokal testen:** `wrangler d1 migrations apply kontor --local --persist-to <ordner>`, dann `wrangler dev --port 8790 --var MAILS:konsole --persist-to <ordner>` (für den Löschlauf zusätzlich `--test-scheduled`, Auslöser `/cdn-cgi/handler/scheduled?cron=17+3+*+*+*`). Der Bestätigungslink steht in der Konsole und zeigt wegen der Route auf `http://kontor.moinsen.dev/…`: Host von Hand auf `localhost:8790` ändern.
+**Open, needs Udi:**
+1. What exactly counts as community approval? Udi's sentence broke off at "wenn die Community die ...". Assumed: implementation starts only after the community has approved the specification. Candidates are in `process.md`.
+2. Whether and when to publish the drafts to the public repo, and to reword the live site.
 
-**Tests:** 41 grün, drei davon schlagen gegen den Abo-Code vom 10.11. fehl.
+**Decided by Udi on 2026-11-11:** Kontor continues independently of Sifa ("Eigenständig weiter"). No outreach planned, and nothing may depend on Sifa's service, schemas or roadmap.
 
-## Sichtbarkeit (Quelle: Ideenkompass, „ASO, SEO und GEO - Übersicht“)
+**Needs before any RFC is accepted:** legal review of RFC 0002 (household exemption, non-members); primary check of LinkedIn's User Agreement section 8.2, which could only be read through secondary sources; a spike on the public-plane protocol.
 
-| Punkt | Seite | Status |
+### Campaign site, live (worker version `c40c15e8`, commit `cbf1cee`)
+
+E-mail updates with double opt-in, updates page with RSS, choose-first join page, daily deletion job at 03:17 UTC, send script `scripts/update-senden.mjs`.
+
+**Checked live on 2026-11-11:** pages, feeds and assets answer 200, feed well-formed, three new tables exist. Form submitted in the browser, confirmation mail arrived at `business@moinsen.dev`, preview of the first update sent. Resend domain verified, open and click tracking off.
+
+**Not checked live:** confirming and unsubscribing with a real link (checked locally), because the mail tool does not release links from mail routed through the `business@` group, and on live systems that click is Udi's. The first cron run is on 2026-11-12 at 03:17 UTC. The test address `business@moinsen.dev` sits unconfirmed in `abos`; if Udi does not confirm it, it must be gone after the run on 2026-11-19, which proves the job works.
+
+**Open:** send the first update after reviewing the preview, once there are recipients (currently 0): `secretariat run kontor -- node scripts/update-senden.mjs 2026-11-10 --senden`.
+
+**Local test:** `wrangler d1 migrations apply kontor --local --persist-to <dir>`, then `wrangler dev --port 8790 --var MAILS:konsole --persist-to <dir>` (add `--test-scheduled` for the job, trigger at `/cdn-cgi/handler/scheduled?cron=17+3+*+*+*`). The confirmation link appears in the console and points to `http://kontor.moinsen.dev/…` because of the route, so replace the host with `localhost:8790`.
+
+**Tests:** 41 passing.
+
+## Visibility (source: Ideenkompass, "ASO, SEO und GEO - Übersicht")
+
+| Item | Page | Status |
 |---|---|---|
-| Eigener Titel, Beschreibung, hreflang | Neuigkeiten | geprüft (Test) |
-| RSS wohlgeformt, beide Sprachen | Feeds | geprüft (live, xmllint) |
-| Aussagen gegen Produkt: Schwellen 1.000 / 25 / 500 € / 7, Livegang 10.11. | erste Neuigkeit | geprüft |
-| Öffentliche Fassung ausgeliefert | Neuigkeiten, Feeds | geprüft (200), Crawling und Indexierung offen |
-| Sitemap, robots.txt | ganze Website | fehlen (404), Wirkung offen, nicht Teil dieses Auftrags |
+| Own title, description, hreflang | Updates | checked (test) |
+| RSS well-formed, both languages | Feeds | checked (live, xmllint) |
+| Claims match the product: thresholds, launch date | First update | checked; framing outdated by RFC 0001 |
+| Public version delivered | Updates, feeds | checked (200); crawling and indexing open |
+| Sitemap, robots.txt | Whole site | missing (404), effect open, out of scope so far |
