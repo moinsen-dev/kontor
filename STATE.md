@@ -2,37 +2,33 @@
 
 ## Übergabe (2026-11-11)
 
-**Geändert und lokal geprüft, noch nicht deployt:**
-- Updates per E-Mail mit Double-Opt-In: `migrations/0004_abos.sql`, `src/abo.js`, API `/api/abo`, `/api/abo/bestaetigen`, `/api/abo/abmelden`.
+**Live auf kontor.moinsen.dev (Worker-Version `c40c15e8`, Commit `cbf1cee`):**
+- Updates per E-Mail mit Double-Opt-In über Resend, API `/api/abo`, `/api/abo/bestaetigen`, `/api/abo/abmelden`.
 - Neuigkeiten-Seite `/neuigkeiten` + `/en/updates` mit Zwischenstand, Abo-Formular und RSS (`/neuigkeiten.xml`, `/en/updates.xml`).
 - Mitmachen-Seite: erst Auswahl (5 Kacheln), dann nur das passende Formular.
-- Versandskript mit Vorschau: `scripts/update-senden.mjs` (noch nie echt gelaufen, braucht die Live-Datenbank).
-- Datenschutz um E-Mail-Updates (Resend) ergänzt. Secretariat-Profil `kontor` mit `RESEND_API_KEY`; Resend-Domain moinsen.dev verifiziert, Tracking aus (Angabe vom 10.11., nicht neu geprüft).
+- Täglicher Löschlauf 03:17 UTC für unbestätigte Adressen (Udis Ja vom 11.11.).
+- Versandskript mit Vorschau: `scripts/update-senden.mjs`.
 
-**Am 11.11. behoben (Tests decken die ersten beiden ab):**
-- Erneute Bestätigungsmail bekam nicht die versprochenen sieben Tage.
-- Zweiter Klick auf den Bestätigungslink meldete „ungültig“.
-- Auf dem Handy lag die Formularüberschrift unter der festen Kopfleiste.
+**Live geprüft (11.11.):** 16 Seiten, Feeds und Assets antworten 200, Feed wohlgeformt, drei neue Tabellen da. Formular im Browser abgeschickt, Bestätigungsmail kam bei `business@moinsen.dev` an. Vorschau des ersten Updates gesendet. Bei Resend: Domain verifiziert, Öffnungs- und Klickverfolgung aus.
+
+**Nicht live geprüft:**
+- Bestätigen und Abmelden mit echtem Link. Das Postfach-Werkzeug gibt Links aus Mails über die Gruppe `business@` nicht heraus (Signatur ersetzt), und auf Live-Systemen ist das Udis Schritt. Lokal im Browser ist beides geprüft.
+- Der Cron-Lauf selbst: erster Lauf 12.11. um 03:17 UTC. Die Testadresse `business@moinsen.dev` steht unbestätigt in `abos`. Bestätigt Udi sie nicht, muss sie nach dem Lauf am 19.11. weg sein (Nachweis für den Löschlauf).
 
 **Offen:**
-1. Täglicher Löschlauf (03:17 UTC, Udis Ja vom 11.11.) ist gebaut und lokal ausgelöst, wirkt aber erst nach dem Deploy.
-2. Secret setzen und deployen (nur mit Udis Ja):
-```
-secretariat run kontor -- sh -c 'umask 077; f=$(mktemp); trap "rm -f \"$f\"" EXIT; printf "{\"RESEND_API_KEY\":\"%s\"}" "$RESEND_API_KEY" > "$f"; wrangler secret bulk "$f" --name kontor'
-wrangler d1 migrations apply kontor --remote && wrangler deploy
-```
-3. Nach dem Deploy: ein echtes Abo mit echter Mail durchspielen, dann die Vorschau von `update-senden.mjs`.
+1. Erstes Update an alle: nach Durchsicht der Vorschau `secretariat run kontor -- node scripts/update-senden.mjs 2026-11-10 --senden`. Aktuell 0 Empfänger.
+2. Sitemap und robots.txt fehlen (siehe unten).
 
-**Lokal testen:** `wrangler d1 migrations apply kontor --local --persist-to <ordner>`, dann `wrangler dev --port 8790 --var MAILS:konsole --persist-to <ordner>`. Der Bestätigungslink steht in der Konsole und zeigt wegen der Route auf `http://kontor.moinsen.dev/…`: Host von Hand auf `localhost:8790` ändern.
+**Lokal testen:** `wrangler d1 migrations apply kontor --local --persist-to <ordner>`, dann `wrangler dev --port 8790 --var MAILS:konsole --persist-to <ordner>` (für den Löschlauf zusätzlich `--test-scheduled`, Auslöser `/cdn-cgi/handler/scheduled?cron=17+3+*+*+*`). Der Bestätigungslink steht in der Konsole und zeigt wegen der Route auf `http://kontor.moinsen.dev/…`: Host von Hand auf `localhost:8790` ändern.
 
-**Gelaufene Prüfungen (11.11.):** 41 Tests grün; drei der neuen Tests schlagen gegen den alten Abo-Code fehl. Löschlauf lokal per `wrangler dev --test-scheduled` ausgelöst: abgelaufene unbestätigte Adresse weg, frische und bestätigte bleiben. Browser lokal: Formular ohne Haken abgelehnt, Anmelden, Link öffnen ändert nichts, Knopf bestätigt, zweiter Klick bestätigt, Abmelden löscht die Zeile. Handybreite 375 und 320 ohne Überlauf. Echter Versand über Resend nicht getestet.
+**Tests:** 41 grün, drei davon schlagen gegen den Abo-Code vom 10.11. fehl.
 
 ## Sichtbarkeit (Quelle: Ideenkompass, „ASO, SEO und GEO - Übersicht“)
 
 | Punkt | Seite | Status |
 |---|---|---|
 | Eigener Titel, Beschreibung, hreflang | Neuigkeiten | geprüft (Test) |
-| RSS wohlgeformt, beide Sprachen | Feeds | geprüft (Test, xmllint) |
+| RSS wohlgeformt, beide Sprachen | Feeds | geprüft (live, xmllint) |
 | Aussagen gegen Produkt: Schwellen 1.000 / 25 / 500 € / 7, Livegang 10.11. | erste Neuigkeit | geprüft |
+| Öffentliche Fassung ausgeliefert | Neuigkeiten, Feeds | geprüft (200), Crawling und Indexierung offen |
 | Sitemap, robots.txt | ganze Website | fehlen (404), Wirkung offen, nicht Teil dieses Auftrags |
-| Öffentliche Fassung nach Deploy | Neuigkeiten, Feeds | geplant |
